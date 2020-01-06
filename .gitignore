@@ -110,3 +110,6 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# dist from reveal
+dist
