@@ -2,7 +2,7 @@
 
 deploy: ## build and deploy reveal slides
 	reveal-md slides/WORKSHOP.md --css slides/reveal.css --template slides/reveal.html --static dist
-	now dist
+	now dist --prod
 
 readme: ## generate the README file TOC
 	doctoc README.md --github
