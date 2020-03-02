@@ -158,6 +158,53 @@ const actors = [{
   }]
 }];
 
-console.log(cars);
-console.log(rentals);
-console.log(actors);
+//Sum of the kmPrice and the dailyPrice
+function rentalPrice(rental) {
+  var totlaRentalPrice = getDailyPrice(rental)+getKmPrice(rental);
+  return totlaRentalPrice;
+};
+
+///We get the km/daily price of a car
+///The boolean allows us to do one function for either the km or the daily
+function getCarPrice(id, km) {
+  var result;
+  for (let i = 0; i < cars.length; i++) {
+    if (cars[i].id == id) {
+      if (km) {
+        result = cars[i].pricePerKm;
+      } else {
+        result = cars[i].pricePerDay;
+      }
+    }
+  }
+  return result;
+};
+
+///We get the price for the duration of the rental
+function getDailyPrice(rental) {
+  var pickupDate = new Date(rental.pickupDate);
+  var returnDate = new Date(rental.returnDate);
+  var duration = returnDate.getTime() / 86400000 - pickupDate.getTime() / 86400000 + 1;
+  var dailyPrice = duration * getCarPrice(rental.carId,false)
+  return dailyPrice;
+};
+
+///We get the price for the distance of the rental
+function getKmPrice(rental){
+  var distance = rental.distance;
+  var kmPrice = distance * getCarPrice(rental.carId,true);
+  return kmPrice;
+}
+
+function showRentalPrice(){
+  var result = [];
+  for (let i = 0; i < rentals.length; i++) {
+    let rentalCost = rentalPrice(rentals[i]);
+    let json = {'idLocation':rentals[i].id,'driver':{'firstname':rentals[i].driver.firstName,'lastname':rentals[i].driver.lastName},'cost':rentalCost};
+    result.push(json);
+  }
+
+  console.log(result);
+}
+
+showRentalPrice();
