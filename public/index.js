@@ -161,15 +161,15 @@ const actors = [{
 //Sum of the kmPrice and the dailyPrice
 function rentalPrice(rental) {
   var dailyPriceAndDuration = getDailyPrice(rental);
-  var totalRentalPrice =   dailyPriceAndDuration[0] + getKmPrice(rental);
-  if (dailyPriceAndDuration[1] >= 1 && dailyPriceAndDuration[1] < 4) {
+  var totalRentalPrice = dailyPriceAndDuration[0] + getKmPrice(rental);
+  if (dailyPriceAndDuration[1] > 1 && dailyPriceAndDuration[1] < 4) {
     totalRentalPrice -= totalRentalPrice / 10;
-  } else if (dailyPriceAndDuration[1] >= 4 && dailyPriceAndDuration[1] < 10) {
+  } else if (dailyPriceAndDuration[1] >=4 && dailyPriceAndDuration[1] < 10) {
     totalRentalPrice -= totalRentalPrice * 30 / 100;
-  } else if (dailyPriceAndDuration[1] <= 10) {
+  } else if (dailyPriceAndDuration[1] >= 10) {
     totalRentalPrice -= totalRentalPrice * 50 / 100;
   }
-  return totalRentalPrice;
+  return [totalRentalPrice, dailyPriceAndDuration[1]];
 };
 
 ///We get the km/daily price of a car
@@ -205,10 +205,11 @@ function getKmPrice(rental) {
   return kmPrice;
 }
 
+///We get all the values that we concentrate in one json
 function showRentalPrice() {
   var result = [];
   for (let i = 0; i < rentals.length; i++) {
-    let rentalCost = rentalPrice(rentals[i]);
+    let rentalCost = rentalPrice(rentals[i])[0];
     let json = {
       'idLocation': rentals[i].id,
       'driver': {
@@ -218,9 +219,18 @@ function showRentalPrice() {
       'cost': rentalCost
     };
     result.push(json);
+    result.push(commissionCalculator(rentals[i]));
   }
-
   console.log(result);
 }
 
+///This function gets the duration and the price of the location and 
+function commissionCalculator(rental) {
+  var priceAndDuration = rentalPrice(rental);
+  var commission = 0.3 * priceAndDuration[0];
+  var insurance = 0.5 * commission;
+  var treasury = 1 * priceAndDuration[1];
+  var virtuo = priceAndDuration[0]-insurance-treasury;
+  return {'commission':{'insurance':insurance,'treasury':treasury,'virtuo':virtuo}};
+}
 showRentalPrice();
