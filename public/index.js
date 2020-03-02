@@ -160,14 +160,13 @@ const actors = [{
 
 //Sum of the kmPrice and the dailyPrice
 function rentalPrice(rental) {
-  dailyPrice,
-  duration = getDailyPrice(rental);
-  var totalRentalPrice = dailyPrice + getKmPrice(rental);
-  if (duration >= 1 && duration < 4) {
+  var dailyPriceAndDuration = getDailyPrice(rental);
+  var totalRentalPrice =   dailyPriceAndDuration[0] + getKmPrice(rental);
+  if (dailyPriceAndDuration[1] >= 1 && dailyPriceAndDuration[1] < 4) {
     totalRentalPrice -= totalRentalPrice / 10;
-  } else if (totalRentalPrice >= 4 && totalRentalPrice < 10) {
+  } else if (dailyPriceAndDuration[1] >= 4 && dailyPriceAndDuration[1] < 10) {
     totalRentalPrice -= totalRentalPrice * 30 / 100;
-  } else if (totalRentalPrice <= 10) {
+  } else if (dailyPriceAndDuration[1] <= 10) {
     totalRentalPrice -= totalRentalPrice * 50 / 100;
   }
   return totalRentalPrice;
@@ -190,12 +189,13 @@ function getCarPrice(id, km) {
 };
 
 ///We get the price for the duration of the rental
+///For the part2 we return also the duration in order to avoid the same computation twice
 function getDailyPrice(rental) {
   var pickupDate = new Date(rental.pickupDate);
   var returnDate = new Date(rental.returnDate);
   var duration = returnDate.getTime() / 86400000 - pickupDate.getTime() / 86400000 + 1;
   var dailyPrice = duration * getCarPrice(rental.carId, false)
-  return dailyPrice, duration;
+  return [dailyPrice, duration];
 };
 
 ///We get the price for the distance of the rental
