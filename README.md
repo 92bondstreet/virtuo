@@ -1,3 +1,5 @@
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/92bondstreet/virtuo) 
+
 # VIRTUO
 
 > JavaScript workshop based on the french startup https://www.govirtuo.com
